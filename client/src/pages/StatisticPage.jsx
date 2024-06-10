@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import Header from "../components/header/Header";
 import StatisticCard from "../components/statistics/StatisticCard";
-import { Area, Pie } from "@ant-design/plots";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  RadialBarChart,
+  RadialBar,
+  Legend,
+} from "recharts";
 import { Spin } from "antd";
 
 const StatisticPage = () => {
@@ -12,7 +22,9 @@ const StatisticPage = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await fetch(process.env.REACT_APP_SERVER_URL + "/api/products/get-all");
+        const res = await fetch(
+          process.env.REACT_APP_SERVER_URL + "/api/products/get-all"
+        );
         const data = await res.json();
         setProducts(data);
       } catch (error) {
@@ -35,55 +47,36 @@ const StatisticPage = () => {
         console.log("fetch data failed", error);
       });
   };
-  const config = {
-    data,
-    xField: "customerName",
-    yField: "subTotal",
-    xAxis: {
-      range: [0, 1],
-    },
-  };
-
-  const config2 = {
-    appendPadding: 10,
-    data,
-    angleField: "subTotal",
-    colorField: "customerName",
-    radius: 1,
-    innerRadius: 0.6,
-    label: {
-      type: "inner",
-      offset: "-50%",
-      content: "{value}",
-      style: {
-        textAlign: "center",
-        fontSize: 14,
-      },
-    },
-    interactions: [
-      {
-        type: "element-selected",
-      },
-      {
-        type: "element-active",
-      },
-    ],
-    statistic: {
-      title: false,
-      content: {
-        style: {
-          whiteSpace: "pre-wrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-        },
-        content: "Toplam\nDeğer",
-      },
-    },
-  };
 
   const totalAmount = () => {
     const amount = data.reduce((total, item) => item.totalAmount + total, 0);
     return amount.toFixed(2);
+  };
+
+  const areaData = data.map((item) => {
+    return {
+      name: item.customerName,
+      uv: item.totalAmount,
+      pv: item.tax,
+      amt: item.subTotal,
+    };
+  });
+
+  const radialData = data.map((item) => {
+    return {
+      name: item.customerName,
+      uv: item.totalAmount,
+      pv: item.tax,
+      fill: `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
+        Math.random() * 255
+      )},${Math.floor(Math.random() * 255)})`,
+    };
+  });
+
+  const style = {
+    top: 0,
+    left: 350,
+    lineHeight: "24px",
   };
 
   return (
@@ -124,10 +117,56 @@ const StatisticPage = () => {
             </div>
             <div className="flex justify-between gap-10 md:flex-row flex-col items-center">
               <div className="md:w-1/2 md:h-64 h-60">
-                <Area {...config} />
+                <AreaChart
+                  width={500}
+                  height={400}
+                  data={areaData}
+                  margin={{
+                    top: 10,
+                    right: 30,
+                    left: 0,
+                    bottom: 0,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Area
+                    type="monotone"
+                    dataKey="uv"
+                    stroke="#8884d8"
+                    fill="#8884d8"
+                  />
+                </AreaChart>
               </div>
               <div className="md:w-1/2 md:h-64 h-60">
-                <Pie {...config2} />
+                <RadialBarChart
+                  width={600}
+                  height={400}
+                  cx={150}
+                  cy={150}
+                  innerRadius={20}
+                  outerRadius={140}
+                  barSize={10}
+                  data={radialData}
+                >
+                  <RadialBar
+                    minAngle={15}
+                    label={{ position: "insideStart", fill: "#000" }}
+                    background
+                    clockWise
+                    dataKey="uv"
+                  />
+                  <Legend
+                    iconSize={10}
+                    width={120}
+                    height={140}
+                    layout="vertical"
+                    verticalAlign="middle"
+                    wrapperStyle={style}
+                  />
+                </RadialBarChart>
               </div>
             </div>
           </div>
