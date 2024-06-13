@@ -1,17 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../components/header/Header";
 import StatisticCard from "../components/statistics/StatisticCard";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  RadialBarChart,
-  RadialBar,
-  Legend,
-} from "recharts";
 import { Spin } from "antd";
 
 const StatisticPage = () => {
@@ -53,32 +42,6 @@ const StatisticPage = () => {
     return amount.toFixed(2);
   };
 
-  const areaData = data.map((item) => {
-    return {
-      name: item.customerName,
-      uv: item.totalAmount,
-      pv: item.tax,
-      amt: item.subTotal,
-    };
-  });
-
-  const radialData = data.map((item) => {
-    return {
-      name: item.customerName,
-      uv: item.totalAmount,
-      pv: item.tax,
-      fill: `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
-        Math.random() * 255
-      )},${Math.floor(Math.random() * 255)})`,
-    };
-  });
-
-  const style = {
-    top: 0,
-    left: 350,
-    lineHeight: "24px",
-  };
-
   return (
     <>
       <Header />
@@ -114,60 +77,6 @@ const StatisticPage = () => {
                 amount={products?.length}
                 img={"images/product.png"}
               />
-            </div>
-            <div className="flex justify-between gap-10 md:flex-row flex-col items-center">
-              <div className="md:w-1/2 md:h-64 h-60">
-                <AreaChart
-                  width={500}
-                  height={400}
-                  data={areaData}
-                  margin={{
-                    top: 10,
-                    right: 30,
-                    left: 0,
-                    bottom: 0,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area
-                    type="monotone"
-                    dataKey="uv"
-                    stroke="#8884d8"
-                    fill="#8884d8"
-                  />
-                </AreaChart>
-              </div>
-              <div className="md:w-1/2 md:h-64 h-60">
-                <RadialBarChart
-                  width={600}
-                  height={400}
-                  cx={150}
-                  cy={150}
-                  innerRadius={20}
-                  outerRadius={140}
-                  barSize={10}
-                  data={radialData}
-                >
-                  <RadialBar
-                    minAngle={15}
-                    label={{ position: "insideStart", fill: "#000" }}
-                    background
-                    clockWise
-                    dataKey="uv"
-                  />
-                  <Legend
-                    iconSize={10}
-                    width={120}
-                    height={140}
-                    layout="vertical"
-                    verticalAlign="middle"
-                    wrapperStyle={style}
-                  />
-                </RadialBarChart>
-              </div>
             </div>
           </div>
         </div>
