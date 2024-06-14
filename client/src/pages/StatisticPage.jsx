@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import Header from "../components/header/Header";
 import StatisticCard from "../components/statistics/StatisticCard";
 import { Spin } from "antd";
-import { PieChart } from "@mui/x-charts/PieChart";
-import { LineChart } from "@mui/x-charts/LineChart";
 
 const StatisticPage = () => {
   const [data, setData] = useState();
@@ -44,31 +42,6 @@ const StatisticPage = () => {
     return amount.toFixed(2);
   };
 
-  const pieData = data.map((item) => {
-    return {
-      id: item._id,
-      value: item.totalAmount,
-      label: item.customerName,
-    };
-  });
-
-  const lineData = data.map((item, index) => {
-    return {
-      index,
-      value: item.totalAmount,
-      label: item.customerName,
-    };
-  });
-
-  let index = [];
-  let values = [];
-  let labels = [];
-  for (let i = 0; i < lineData.length; i++) {
-    index.push(lineData[i].index + 1);
-    values.push(lineData[i].value);
-    labels.push(lineData[i].label);
-  }
-
   return (
     <>
       <Header />
@@ -104,27 +77,6 @@ const StatisticPage = () => {
                 amount={products?.length}
                 img={"images/product.png"}
               />
-            </div>
-            <div className="flex justify-between gap-10 md:flex-row flex-col items-center">
-              <div className="md:w-1/2 md:h-64 h-60">
-                <LineChart
-                  xAxis={[{ data: labels, scaleType: "point" }]}
-                  series={[{ data: values, showMark: false, area: true }]}
-                  height={250}
-                  width={600}
-                  margin={{ left: 60, top: 10 }}
-                />
-              </div>
-              <div className="md:w-1/2 md:h-64 h-60">
-                <PieChart
-                  series={[
-                    {
-                      data: pieData,
-                    },
-                  ]}
-                  width={600}
-                />
-              </div>
             </div>
           </div>
         </div>
