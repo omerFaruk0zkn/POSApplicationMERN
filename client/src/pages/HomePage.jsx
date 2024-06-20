@@ -72,7 +72,7 @@ const HomePage = () => {
             />
           </div>
 
-          <div className="cart-wrapper min-w-[300px] md:-mr-6 md:-mt-6 border">
+          <div className="cart-wrapper min-w-[300px] md:-mr-6 md:-mt-6 border pb-10 md:pb-0">
             <CartTotals />
           </div>
         </div>
